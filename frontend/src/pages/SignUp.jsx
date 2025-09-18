@@ -3,6 +3,8 @@ import { FaRegEye } from 'react-icons/fa'
 import { FaRegEyeSlash } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 import { useNavigate } from 'react-router-dom'
+import { serverUrl } from '../App'
+import axios from 'axios'
 
 const SignUp = () => {
     const primaryColor = "#ff4d2d";
@@ -12,6 +14,27 @@ const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [role,setRole]=useState("user");
     const navigate=useNavigate();
+    const [fullName,setFullName]=useState("");
+    const [email,setEmail]=useState("");
+    const [mobile,setMobile]=useState("");
+    const [password,setPassword]=useState("");
+
+    const handleSignUp=async ()=>{
+        try {
+            const result = await axios.post(`${serverUrl}/api/auth/signup`,{
+                fullName,email,mobile,password,role
+            },{withCredentials:true});
+            console.log(result);
+            // if(result.data.success){
+            //     alert("Sign Up Successful");
+            //     navigate("/signin");
+            // }
+        } catch (error) {
+            console.log(error);
+            alert("Something went wrong");
+        }
+    }
+
   return (
     <div className='min-h-screen w-full flex items-center justify-center p-4' style=
     {{backgroundColor: bgColor}}>
@@ -20,14 +43,15 @@ const SignUp = () => {
             border: `1px solid ${borderColor}`
         }}>
             <h1 className={`text-3xl font bold mb-2`} style={{color:primaryColor}}>Yumzy</h1>
-            <p className='text-gray-600 mb-8'>Create your account tp get delicious food </p>
+            <p className='text-gray-600 mb-8'>Create your account to get delicious food </p>
 
             {/* fullName */}
 
             <div className='mb-4'>
                 <label htmlFor='fullName' className='block text-gray-700 font-medium mb-1'>Full Name</label>
                 <input type='text' className='w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500' 
-                 placeholder='Enter your full Name' style={{border: `1px solid ${borderColor}`}}/>
+                 placeholder='Enter your full Name' style={{border: `1px solid ${borderColor}`}} onChange={(e)=>setFullName(e.target.value)}
+                 value={fullName} />
             </div>   
 
             {/* email */}
@@ -35,7 +59,8 @@ const SignUp = () => {
             <div className='mb-4'>
                 <label htmlFor='email' className='block text-gray-700 font-medium mb-1'>Email</label>
                 <input type='email' className='w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500' 
-                 placeholder='Enter your email' style={{border: `1px solid ${borderColor}`}}/>
+                 placeholder='Enter your email' style={{border: `1px solid ${borderColor}`}} onChange={(e)=>setEmail(e.target.value)}
+                 value={email}/>
             </div>   
 
             {/* Mobile */}
@@ -43,7 +68,8 @@ const SignUp = () => {
             <div className='mb-4'>
                 <label htmlFor='mobile' className='block text-gray-700 font-medium mb-1'>Mobile</label>
                 <input type='text' className='w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500' 
-                 placeholder='Enter your Mobile Number' style={{border: `1px solid ${borderColor}`}}/>
+                 placeholder='Enter your Mobile Number' style={{border: `1px solid ${borderColor}`}} onChange={(e)=>setMobile(e.target.value)}
+                 value={mobile}/>
             </div>  
 
             {/* Password */}
@@ -52,7 +78,8 @@ const SignUp = () => {
                 <label htmlFor='password' className='block text-gray-700 font-medium mb-1'>Password</label>
                 <div className='relative'>
                     <input type={`${showPassword?"text":"password"}`} className='w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500' 
-                     placeholder='Enter your Password' style={{border: `1px solid ${borderColor}`}}/>
+                     placeholder='Enter your Password' style={{border: `1px solid ${borderColor}`}} onChange={(e)=>setPassword(e.target.value)}
+                     value={password}/>
                 <button className='absolute right-3 top-[14px] text-gray-500' onClick={()=>setShowPassword(prev=>!prev)}>{!showPassword?<FaRegEye/>:<FaRegEyeSlash/>}</button>
                 </div>
             </div>  
@@ -74,7 +101,8 @@ const SignUp = () => {
                     ))}
                 </div>
             </div>  
-            <button className={`w-full font-semibold py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer rounded-2xl`}>
+            <button className={`w-full font-semibold py-2 transition duration-200 bg-[#ff4d2d] text-white hover:bg-[#e64323] cursor-pointer rounded-2xl`}
+            onClick={handleSignUp}>
                 Sign Up
             </button>
 
